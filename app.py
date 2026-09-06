@@ -189,4 +189,3 @@ Student Query:
 
         st.error("❌ Gemini API Error")
         st.code(str(e))
-```
