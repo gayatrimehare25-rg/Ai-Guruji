@@ -16,7 +16,9 @@ if not api_key:
     st.error("API Key missing! Please set GEMINI_API_KEY in Streamlit Secrets.")
 else:
     # Initialize Gemini Client
-    client = genai.Client(api_key=api_key)
+    from google.genai.types import HttpOptions
+
+client = genai.Client(api_key=api_key, http_options=HttpOptions(api_version="v1"))
 
     # Dropdown for Academic Tasks
     task_type = st.selectbox(
