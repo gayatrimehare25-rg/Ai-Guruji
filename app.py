@@ -24,7 +24,7 @@ else:
         "Select Type of Problem",
         [
             "Solve a Doubt / Question (Step-by-Step)",
-            "Explain Topic Simply (ELI5 Mode)",
+            "Explain Topic Simply ",
             "Summarize Notes & Generate Exam Questions",
             "Create Study Plan from Syllabus"
         ]
