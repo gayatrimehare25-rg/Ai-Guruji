@@ -1,4 +1,6 @@
+```python
 import os
+import time
 import streamlit as st
 from google import genai
 from google.genai import types
@@ -118,29 +120,74 @@ Student Query:
 """
 
             # --------------------------------------------------
-            # Gemini 2.5 Flash
+            # Gemini Model
             # --------------------------------------------------
 
-            response = client.models.generate_content(
-                model="gemini-3.6-flash",
-                contents=full_prompt,
-                config=types.GenerateContentConfig(
-                    temperature=temperature
-                )
-            )
+            response = None
+
+            # Primary model
+            models_to_try = [
+                "gemini-2.5-flash",
+                "gemini-2.5-flash-lite"
+            ]
+
+            last_error = None
+
+            # --------------------------------------------------
+            # Retry + Fallback
+            # --------------------------------------------------
+
+            for model_name in models_to_try:
+
+                for attempt in range(3):
+
+                    try:
+
+                        response = client.models.generate_content(
+                            model=model_name,
+                            contents=full_prompt,
+                            config=types.GenerateContentConfig(
+                                temperature=temperature
+                            )
+                        )
+
+                        # If successful, stop retrying
+                        if response and response.text:
+                            break
+
+                    except Exception as e:
+
+                        last_error = e
+
+                        # Wait before retrying
+                        if attempt < 2:
+                            time.sleep(2)
+
+                # If successful, stop trying other models
+                if response and response.text:
+                    break
 
             # --------------------------------------------------
             # Display Response
             # --------------------------------------------------
 
-            if response.text:
+            if response and response.text:
+
                 st.success("✅ Done!")
                 st.markdown(response.text)
+
             else:
-                st.warning("⚠️ Gemini returned an empty response.")
+
+                st.error(
+                    "❌ Gemini is currently unavailable. "
+                    "Please try again after a few seconds."
+                )
+
+                if last_error:
+                    st.code(str(last_error))
 
     except Exception as e:
 
         st.error("❌ Gemini API Error")
-
         st.code(str(e))
+```
