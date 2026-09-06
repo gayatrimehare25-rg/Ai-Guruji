@@ -1,6 +1,7 @@
 import os
 import streamlit as st
 from google import genai
+from google.genai.types import HttpOptions
 
 # Page Configuration
 st.set_page_config(page_title="AI Guruji - Student Assistant", page_icon="💡")
@@ -9,19 +10,20 @@ st.set_page_config(page_title="AI Guruji - Student Assistant", page_icon="💡")
 st.title("📚 AI Guruji: Smart Study Assistant")
 st.write("Your trusted AI Guru for complete study support!")
 
-# API Key handling for both Local & Streamlit Cloud
+# API Key handling
 api_key = st.secrets.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
 
 if not api_key:
     st.error("API Key missing! Please set GEMINI_API_KEY in Streamlit Secrets.")
 else:
-    # Initialize Gemini Client
-    from google.genai.types import HttpOptions
-
-client = genai.Client(api_key=api_key, http_options=HttpOptions(api_version="v1"))
+    # Initialize Gemini Client with Stable v1 Endpoint
+    client = genai.Client(
+        api_key=api_key, 
+        http_options=HttpOptions(api_version="v1")
+    )
 
     # Dropdown for Academic Tasks
-task_type = st.selectbox(
+    task_type = st.selectbox(
         "Select Type of Problem",
         [
             "Solve a Doubt / Question (Step-by-Step)",
@@ -45,7 +47,6 @@ task_type = st.selectbox(
         else:
             try:
                 with st.spinner("Please Wait..."):
-                    # Custom System Instruction for AI Guruji
                     system_instruction = (
                         f"You are 'AI Guruji', a friendly, wise, and highly capable academic mentor for students. "
                         f"The student needs help with: '{task_type}'. "
@@ -54,7 +55,7 @@ task_type = st.selectbox(
                     
                     full_prompt = f"{system_instruction}\n\nStudent Query:\n{user_input}"
 
-                    # Primary attempt on gemini-2.5-flash, fallback to gemini-1.5-flash if quota hits
+                    # Fallback logic for high availability
                     try:
                         response = client.models.generate_content(
                             model='gemini-2.5-flash',
