@@ -17,7 +17,7 @@ if not api_key:
 else:
     # Initialize Gemini API
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-1.5-flash-latest")
+    model = genai.GenerativeModel("gemini-3.6-flash")
 
     # Dropdown for Academic Tasks
     task_type = st.selectbox(
