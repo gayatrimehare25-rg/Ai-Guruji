@@ -2,7 +2,6 @@ import os
 import streamlit as st
 import google.generativeai as genai
 # Load environment variables
-load_dotenv()
 
 # Page Configuration
 st.set_page_config(page_title="AI Guruji - Student Assistant", page_icon="💡")
