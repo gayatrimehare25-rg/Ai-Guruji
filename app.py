@@ -52,11 +52,10 @@ else:
                     
                     full_prompt = f"{system_instruction}\n\nStudent Query:\n{user_input}"
 
-                    # API Call using google-genai SDK
-                    # Primary attempt on 3.6-flash, fallback to 1.5-flash if quota hits
+                    # Primary attempt on gemini-2.5-flash, fallback to gemini-1.5-flash if quota hits
                     try:
                         response = client.models.generate_content(
-                            model='gemini-3.6-flash',
+                            model='gemini-2.5-flash',
                             contents=full_prompt,
                         )
                     except Exception:
@@ -64,11 +63,6 @@ else:
                             model='gemini-1.5-flash',
                             contents=full_prompt,
                         )
-                    
-                    st.success("Done!")
-                    st.markdown(response.text)
-            except Exception as e:
-                st.error(f"Error: {e}")
                     
                     st.success("Done!")
                     st.markdown(response.text)
