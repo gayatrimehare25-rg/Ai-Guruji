@@ -126,8 +126,7 @@ Student Query:
 
             # Primary model
             models_to_try = [
-                "gemini-2.5-flash",
-                "gemini-2.5-flash-lite"
+                "gemini-3.6-flash"
             ]
 
             last_error = None
