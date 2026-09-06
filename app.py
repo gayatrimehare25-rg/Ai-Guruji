@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-import google.generativeai as genai
+from google import genai
 
 # Page Configuration
 st.set_page_config(page_title="AI Guruji - Student Assistant", page_icon="💡")
@@ -15,16 +15,15 @@ api_key = st.secrets.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
 if not api_key:
     st.error("API Key missing! Please set GEMINI_API_KEY in Streamlit Secrets.")
 else:
-    # Initialize Gemini API
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-pro")
+    # Initialize Gemini Client
+    client = genai.Client(api_key=api_key)
 
     # Dropdown for Academic Tasks
     task_type = st.selectbox(
         "Select Type of Problem",
         [
             "Solve a Doubt / Question (Step-by-Step)",
-            "Explain Topic Simply ",
+            "Explain Topic Simply",
             "Summarize Notes & Generate Exam Questions",
             "Create Study Plan from Syllabus"
         ]
@@ -53,15 +52,10 @@ else:
                     
                     full_prompt = f"{system_instruction}\n\nStudent Query:\n{user_input}"
 
-                    # Correct Gemini Call
-                    generation_config = genai.types.GenerationConfig(
-                        temperature=temperature,
-                        max_output_tokens=4000
-                    )
-
-                    response = model.generate_content(
-                        full_prompt,
-                        generation_config=generation_config
+                    # API Call using google-genai SDK
+                    response = client.models.generate_content(
+                        model='gemini-2.5-flash',
+                        contents=full_prompt,
                     )
                     
                     st.success("Done!")
