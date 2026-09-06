@@ -12,7 +12,7 @@ st.write("Your trusted AI Guru for complete study support. !")
 
 # Initialize Gemini Client
 api_key = os.getenv("GEMINI_API_KEY")
-client = genai.Client(api_key=api_key)
+genai.configure(api_key=api_key)
 
 # Dropdown for Academic Tasks
 task_type = st.selectbox(
