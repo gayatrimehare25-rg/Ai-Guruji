@@ -21,7 +21,7 @@ else:
 client = genai.Client(api_key=api_key, http_options=HttpOptions(api_version="v1"))
 
     # Dropdown for Academic Tasks
-    task_type = st.selectbox(
+task_type = st.selectbox(
         "Select Type of Problem",
         [
             "Solve a Doubt / Question (Step-by-Step)",
